@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+
 import { db } from "@/lib/db";
 import { createInviteSchema } from "@/lib/validators";
 import { addDays } from "date-fns";
+import { validateRequest } from "@/lib/auth";
 
 export async function POST(req: Request) {
   try {
-    const session = await auth();
-    if (!session || session.user.role !== 'ADMIN') {
+    const session = await validateRequest();
+    if (!session || session.user.role !== "ADMIN") {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
@@ -19,8 +20,8 @@ export async function POST(req: Request) {
         token: crypto.randomUUID(),
         adminNickname,
         expiresAt: addDays(new Date(), 30),
-        createdBy: session.user.id
-      }
+        createdBy: session.user.id,
+      },
     });
 
     return NextResponse.json({ token: invitation.token });

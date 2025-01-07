@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
-import { auth, lucia } from "@/lib/auth";
+import { lucia } from "@/lib";
+import { validateRequest } from "@/lib/auth";
 
 export async function POST() {
   try {
-    const session = await auth();
+    const session = await validateRequest();
     if (!session) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
@@ -13,8 +14,8 @@ export async function POST() {
 
     return new NextResponse(null, {
       headers: {
-        "Set-Cookie": sessionCookie.serialize()
-      }
+        "Set-Cookie": sessionCookie.serialize(),
+      },
     });
   } catch (error) {
     console.error("[LOGOUT_POST]", error);

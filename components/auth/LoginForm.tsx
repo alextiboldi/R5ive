@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signInSchema } from "@/lib/validators";
@@ -20,7 +21,7 @@ export function LoginForm() {
 
     try {
       signInSchema.parse(data);
-      
+
       const res = await fetch("/api/auth/login", {
         method: "POST",
         body: JSON.stringify(data),
@@ -34,7 +35,7 @@ export function LoginForm() {
       }
 
       router.refresh();
-      router.push("/");
+      router.push("/events");
     } catch (error) {
       setError(error instanceof Error ? error.message : "Something went wrong");
     } finally {
@@ -70,9 +71,7 @@ export function LoginForm() {
         />
       </div>
 
-      {error && (
-        <p className="text-red-500 text-sm">{error}</p>
-      )}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
 
       <button
         type="submit"

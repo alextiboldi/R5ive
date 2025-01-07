@@ -1,17 +1,32 @@
-import Image from "next/image";
+import { UserMenu } from "@/components/nav/UserMenu";
+import { validateRequest } from "@/lib/auth";
+import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const { session } = await validateRequest();
+
   return (
     <div className="min-h-screen">
       {/* Navigation */}
       <nav className="flex justify-between items-center p-6">
         <div className="text-2xl font-bold">R5ive</div>
-        <a
-          href="/login"
-          className="rounded-full bg-foreground text-background px-6 py-2 hover:opacity-90 transition-opacity"
-        >
-          Login
-        </a>
+        {session ? (
+          <div className="flex items-center gap-4">
+            <Link
+              href="/events"
+              className="rounded-full bg-foreground text-background px-6 py-2 hover:opacity-90 transition-opacity"
+            >
+              Dashboard
+            </Link>
+          </div>
+        ) : (
+          <Link
+            href="/login"
+            className="rounded-full bg-foreground text-background px-6 py-2 hover:opacity-90 transition-opacity"
+          >
+            Login
+          </Link>
+        )}
       </nav>
 
       {/* Hero Section */}
@@ -20,7 +35,8 @@ export default function Home() {
           R5ive: Empower Your Alliance Leadership
         </h1>
         <p className="text-lg mb-12 text-foreground/80">
-          Streamline event management and elevate your alliance to the next level.
+          Streamline event management and elevate your alliance to the next
+          level.
         </p>
 
         {/* Feature Section */}
@@ -29,8 +45,8 @@ export default function Home() {
             Lead with Confidence
           </h2>
           <p className="text-lg text-foreground/80 max-w-2xl mx-auto">
-            R5ive is the ultimate tool for alliance leaders to plan, organize, and
-            execute events seamlessly. Whether you're coordinating battles,
+            R5ive is the ultimate tool for alliance leaders to plan, organize,
+            and execute events seamlessly. Whether you're coordinating battles,
             rallies, or strategy meetings, R5ive has you covered.
           </p>
         </div>

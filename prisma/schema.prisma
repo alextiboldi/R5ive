@@ -26,25 +26,30 @@ model User {
 
   createdAt DateTime @default(now())
 
-  sessions Session[]
-  accounts Account[]
-  events   EventAnnouncement[]
-  responses EventResponse[]
-  invitationToken InvitationToken?
+  sessions         Session[]
+  accounts         Account[]
+  events           EventAnnouncement[]
+  responses        EventResponse[]
+  invitationToken  InvitationToken?
+  announcements    Announcement[]
+  pollVotes        PollVote[]
+  Poll             Poll[]
+  TimeSlotResponse TimeSlotResponse[]
+  UserSession      UserSession[]
 }
 
 model InvitationToken {
-  id              String    @id @default(uuid())
-  token           String    @unique
-  adminNickname   String
-  userNickname    String?
-  expiresAt       DateTime
-  used            Boolean   @default(false)
-  createdAt       DateTime  @default(now())
-  
-  user            User?     @relation(fields: [userId], references: [id])
-  userId          String?   @unique
-  createdBy       String
+  id            String   @id @default(uuid())
+  token         String   @unique
+  adminNickname String
+  userNickname  String?
+  expiresAt     DateTime
+  used          Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  user      User?   @relation(fields: [userId], references: [id])
+  userId    String? @unique
+  createdBy String
 
   @@map("users")
 }
@@ -65,23 +70,23 @@ enum DayOfWeek {
 }
 
 enum ResponseType {
-  ACCEPT
-  DECLINE
+  ACCEPTED
+  DECLINED
 }
 
 model EventAnnouncement {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   title       String
   description String
   dayOfWeek   DayOfWeek
   timeGmt     String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  createdBy   User     @relation(fields: [userId], references: [id])
-  userId      String
+  createdBy User   @relation(fields: [userId], references: [id])
+  userId    String
 
-  responses   EventResponse[]
+  responses EventResponse[]
 
   @@map("event_announcements")
 }
@@ -92,10 +97,10 @@ model EventResponse {
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 
-  user      User             @relation(fields: [userId], references: [id])
-  userId    String
-  event     EventAnnouncement @relation(fields: [eventId], references: [id])
-  eventId   String
+  user    User              @relation(fields: [userId], references: [id])
+  userId  String
+  event   EventAnnouncement @relation(fields: [eventId], references: [id])
+  eventId String
 
   @@unique([userId, eventId])
   @@map("event_responses")
@@ -122,4 +127,113 @@ model Session {
   user User @relation(references: [id], fields: [userId], onDelete: Cascade)
 
   @@map("sessions")
+}
+
+model Announcement {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdBy User   @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@map("announcements")
+}
+
+model Poll {
+  id          String   @id @default(uuid())
+  title       String
+  description String?  @db.Text
+  type        PollType @default(REGULAR)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdBy User       @relation(fields: [userId], references: [id])
+  userId    String
+  votes     PollVote[]
+  timeSlots TimeSlot[]
+
+  @@map("polls")
+}
+
+enum PollType {
+  REGULAR
+  TIME
+}
+
+model TimeSlot {
+  id        String             @id @default(uuid())
+  dayOfWeek DayOfWeek
+  timeGmt   String
+  poll      Poll               @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  pollId    String
+  responses TimeSlotResponse[]
+
+  @@unique([pollId, dayOfWeek, timeGmt])
+  @@map("time_slots")
+}
+
+model TimeSlotResponse {
+  id        String   @id @default(uuid())
+  available Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  timeSlot   TimeSlot @relation(fields: [timeSlotId], references: [id])
+  timeSlotId String
+
+  @@unique([userId, timeSlotId])
+  @@map("time_slot_responses")
+}
+
+model PollVote {
+  id        String   @id @default(uuid())
+  vote      Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  poll   Poll   @relation(fields: [pollId], references: [id])
+  pollId String
+
+  @@unique([userId, pollId])
+  @@map("poll_votes")
+}
+
+model UserDevice {
+  id             String   @id @default(uuid())
+  userAgent      String   @unique
+  browserName    String?
+  browserVersion String?
+  osName         String?
+  osVersion      String?
+  deviceType     String?
+  createdAt      DateTime @default(now())
+  lastSeenAt     DateTime @default(now())
+
+  sessions UserSession[]
+
+  @@map("user_devices")
+}
+
+model UserSession {
+  id          String   @id @default(uuid())
+  userId      String
+  deviceId    String
+  ipAddress   String?
+  countryCode String?
+  region      String?
+  city        String?
+  language    String?
+  createdAt   DateTime @default(now())
+
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device UserDevice @relation(fields: [deviceId], references: [id])
+
+  @@map("user_sessions")
 }
