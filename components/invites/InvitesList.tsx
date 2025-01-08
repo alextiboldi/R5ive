@@ -29,7 +29,7 @@ async function copyToClipboard(token: string) {
 
 export function InvitesList({ invites }: InvitesListProps) {
   return (
-    <div className="space-y-4">
+    <div className="flex lg:flex-row flex-col mx-10 gap-4">
       {invites.map((invite) => (
         <div
           key={invite.id}

@@ -34,7 +34,6 @@ export function LoginForm() {
         throw new Error("Invalid credentials");
       }
 
-      router.refresh();
       router.push("/events");
     } catch (error) {
       setError(error instanceof Error ? error.message : "Something went wrong");

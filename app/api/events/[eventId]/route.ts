@@ -50,10 +50,14 @@ export async function DELETE(
 ) {
   try {
     const session = await validateRequest();
-    if (!session || session.user.role !== "ADMIN") {
+
+    if (!session || session.user?.role !== "ADMIN") {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    await db.eventResponse.deleteMany({
+      where: { eventId: params.eventId },
+    });
     await db.eventAnnouncement.delete({
       where: { id: params.eventId },
     });

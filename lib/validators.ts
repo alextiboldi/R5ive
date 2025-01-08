@@ -2,9 +2,8 @@ import { z } from "zod";
 
 export const signUpSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
-  nickname: z.string().min(3),
-  name: z.string().min(1),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  nickname: z.string().min(3, "Nickname must be at least 3 characters"),
   timezone: z.string(),
   token: z.string().uuid(),
 });

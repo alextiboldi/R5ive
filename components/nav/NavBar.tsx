@@ -65,6 +65,14 @@ const Navbar = ({ user }: { user: User }) => {
                   </NavigationMenu.Link>
                 </NavigationMenu.Item>
                 <NavigationMenu.Item>
+                  <NavigationMenu.Link
+                    className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                    href="/users"
+                  >
+                    Players
+                  </NavigationMenu.Link>
+                </NavigationMenu.Item>
+                <NavigationMenu.Item>
                   <NavigationMenu.Link className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
                     About
                   </NavigationMenu.Link>

@@ -53,7 +53,7 @@ export default async function EventsPage() {
 
   const totalDeclined = events.reduce((acc, event) => {
     const acceptedCount = event.responses.filter(
-      (response) => response.response === ResponseType.DECLINE
+      (response) => response.response === ResponseType.DECLINED
     ).length;
 
     return acc + acceptedCount;
@@ -73,13 +73,13 @@ export default async function EventsPage() {
   }));
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold">Events</h1>
         {isAdmin && <CreateEventDialog />}
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex lg:flex-row flex-col mx-10 gap-4">
         {eventsWithCounts.map((event) => (
           <EventCard
             key={event.id}

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { signUpSchema } from "@/lib/validators";
 import { rawTimeZones } from "@vvo/tzdb";
 import * as Select from "@radix-ui/react-select";
+import Link from "next/link";
 
 interface Option {
   value: string;
@@ -60,7 +61,6 @@ export function SignUpForm({ token }: SignUpFormProps) {
       email: formData.get("email") as string,
       password: formData.get("password") as string,
       nickname: formData.get("nickname") as string,
-      name: formData.get("name") as string,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       token: formData.get("token") as string,
     };
@@ -168,19 +168,6 @@ export function SignUpForm({ token }: SignUpFormProps) {
       </div>
 
       <div>
-        <label htmlFor="name" className="block text-sm font-medium mb-1">
-          Full Name
-        </label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          required
-          className="w-full p-2 rounded-md border bg-background"
-        />
-      </div>
-
-      <div>
         <label htmlFor="password" className="block text-sm font-medium mb-1">
           Password
         </label>
@@ -216,6 +203,9 @@ export function SignUpForm({ token }: SignUpFormProps) {
       >
         {loading ? "Loading..." : "Create Account"}
       </button>
+      <p>
+        Already have an account? <Link href={"/signin"}>Login here</Link>
+      </p>
     </form>
   );
 }

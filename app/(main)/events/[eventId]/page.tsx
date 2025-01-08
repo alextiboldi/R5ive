@@ -27,9 +27,9 @@ export default async function EventPage({
       },
     },
   });
-
+  if (!event) return notFound();
   const options = {
-    time: "14:30", // 2:30 PM
+    time: event?.timeGmt, // 2:30 PM
     serverTimezone: "Europe/London",
     userTimezone: session?.user?.timezone,
   };

@@ -10,7 +10,7 @@ export default async function Layout({
   children: React.ReactNode;
 }>) {
   const session = await validateRequest();
-  console.log("Session", session);
+
   if (!session.user && !session.session) redirect("/");
   return (
     <SessionProvider value={session}>

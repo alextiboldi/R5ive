@@ -6,9 +6,9 @@ import { CreateInviteDialog } from "@/components/invites/CreateInviteDialog";
 
 export default async function InvitesPage() {
   const session = await validateRequest();
-  if (!session?.user || session.user.role !== "ADMIN") {
-    redirect("/");
-  }
+  if (!session?.user) redirect("/");
+
+  const isAdmin = session?.user?.role === "ADMIN";
 
   const invites = await db.invitationToken.findMany({
     orderBy: {
@@ -25,11 +25,12 @@ export default async function InvitesPage() {
   });
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold">Invitations</h1>
-        <CreateInviteDialog />
+        {isAdmin && <CreateInviteDialog />}
       </div>
+
       <InvitesList invites={invites} />
     </div>
   );

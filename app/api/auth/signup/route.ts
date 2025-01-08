@@ -8,10 +8,10 @@ import { Argon2id } from "oslo/password";
 export async function POST(req: Request, { headers }: { headers: Headers }) {
   try {
     const json = await req.json();
-    // const { email, password, nickname, name, timezone, token } =
+    // const { email, password, nickname, timezone, token } =
     //   signUpSchema.parse(json);
-    const { email, password, nickname, name, timezone, token } = json;
-    console.log(email, password, nickname, name, timezone, token);
+    const { email, password, nickname, timezone, token } = json;
+
     // Verify invitation token
     const invitation = await db.invitationToken.findUnique({
       where: { token, used: false },
@@ -33,7 +33,6 @@ export async function POST(req: Request, { headers }: { headers: Headers }) {
           id: userId,
           email,
           nickname,
-          name,
           timezone,
           password: hashedPassword,
         },

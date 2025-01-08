@@ -54,7 +54,7 @@ export function CreateEventDialog() {
     <Dialog.Root modal={true} open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
         <button className="px-4 py-2 rounded-md bg-foreground text-background hover:opacity-90">
-          Create Event
+          Create
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>

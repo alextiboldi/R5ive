@@ -16,7 +16,7 @@ export function CreateInviteDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button className="px-4 py-2 rounded-md bg-foreground text-background hover:opacity-90">
-          Create Invitation
+          Create
         </button>
       </DialogTrigger>
       <DialogContent>
